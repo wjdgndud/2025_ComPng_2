@@ -1,2 +1,2 @@
-# 2025 Open SOurce Software Project
+# 2025 Open Source Software Project
 
