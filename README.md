@@ -11,12 +11,12 @@ Description
 ## Team roles & Development areas
 ### Group Leader
 강태현
-Description
+JavaScript, HTML
 ### Group Member
 이우석
-(Details)
+CSS
 정후영
-(Details)
+DataBase
 
 ## Required techonology field
 ### Type 1
