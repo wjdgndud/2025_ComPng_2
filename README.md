@@ -15,6 +15,7 @@ JavaScript, HTML
 ### Group Member
 이우석
 CSS
+
 정후영
 DataBase
 
