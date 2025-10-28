@@ -2,7 +2,7 @@
 
 # Anonymous Voting System
 
-### Simple Description
+### Vote system that involves function to upload questions and store responds to database
 Specific description
 
 ## Project Schedule
