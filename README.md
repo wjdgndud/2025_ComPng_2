@@ -19,7 +19,7 @@ Description
 (Details)
 
 ## Required techonology field
-### Type
-Description
-### Type
+### Type 1
+CSS, JavaScript, HTML
+### Type 2
 Description
