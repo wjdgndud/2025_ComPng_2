@@ -12,21 +12,30 @@ Web-based open-source project that allows users to participate in polls and surv
 - Ensure data integrity through secure backend processing.
 
 ## Project Schedule
+### **Publishing Deadline:Wednesday, December 17th, 2025**
 Description
 
 ## Team roles & Development areas
 ### Group Leader
 강태현
-JavaScript, HTML
+Team coordination
+Frontend development with JavaScript and HTML
+
 ### Group Member
 이우석
-CSS
+CSS styling and responsive UI/UX design
+Page layout, theme consistency, and accessibility improvement
 
 정후영
-DataBase
+Database schema design and implementation
+Data handling, storage logic, and query optimization
 
 ## Required techonology field
-### Type 1
-CSS, JavaScript, HTML
-### Type 2
-Description
+| Category            | Technology                                                                        |
+| ------------------- | --------------------------------------------------------------------------------- |
+| **Frontend**        | JavaScript, HTML5                                                                 |
+| **Backend**         | Node.js                                                                           |
+| **Database**        |                                                                                   |
+| **Version Control** | Git / GitHub                                                                      |
+| **Deployment**      |                                                                                   |
+| **Optional Tools**  |                                                                                   |
