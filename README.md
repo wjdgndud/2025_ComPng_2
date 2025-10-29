@@ -13,7 +13,15 @@ Web-based open-source project that allows users to participate in polls and surv
 
 ## Project Schedule
 ### **Publishing Deadline:Wednesday, December 17th, 2025**
-Description
+| Week       | Period          | Tasks                                                              |
+| ---------- | --------------- | ------------------------------------------------------------------ |
+| **Week 1** | Oct 28 – Nov 3  | Requirements analysis, project setup, GitHub repository setup      |
+| **Week 2** | Nov 4 – Nov 10  |                                                                    |
+| **Week 3** | Nov 11 – Nov 17 |                                                                    |
+| **Week 4** | Nov 18 – Nov 24 |                                                                    |
+| **Week 5** | Nov 25 – Dec 1  |                                                                    |
+| **Week 6** | Dec 2 – Dec 9   | System testing, bug fixing, UI refinement                          |
+| **Week 7** | Dec 10 – Dec 17 | Documentation, deployment, and final presentation                  |
 
 ## Team roles & Development areas
 ### Group Leader
