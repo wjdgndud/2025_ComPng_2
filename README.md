@@ -18,17 +18,17 @@ Description
 ## Team roles & Development areas
 ### Group Leader
 강태현
-Team coordination
-Frontend development with JavaScript and HTML
+- Team coordination
+- Frontend development with JavaScript and HTML
 
 ### Group Member
 이우석
-CSS styling and responsive UI/UX design
-Page layout, theme consistency, and accessibility improvement
+- CSS styling and responsive UI/UX design
+- Page layout, theme consistency, and accessibility improvement
 
 정후영
-Database schema design and implementation
-Data handling, storage logic, and query optimization
+- Database schema design and implementation
+- Data handling, storage logic, and query optimization
 
 ## Required techonology field
 | Category            | Technology                                                                        |
