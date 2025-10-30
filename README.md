@@ -48,4 +48,4 @@ Web-based open-source project that allows users to participate in polls and surv
 | **Deployment**      |                                                                                   |
 | **Optional Tools**  |                                                                                   |
 
-<img width="1024" height="1024" alt="oss_demo" src="https://github.com/user-attachments/assets/f75e98c3-3881-4c9c-b2a5-255b86648734" />
+<img width="294" height="174" alt="image" src="https://github.com/user-attachments/assets/4b6fb8c6-7462-4ed1-a465-77caeff9ee59" />
