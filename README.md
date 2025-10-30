@@ -3,7 +3,7 @@
 # Anonymous Voting System
 
 ### Vote system that involves function to upload questions and store responds to database
-Web-based open-source project that allows users to participate in polls and surveys anonymously. The system enables administrators to create and manage polls while ensuring that all participant responses are securely stored in a database without collecting identifiable personal information. This project focuses on simplicity, transparency, and data privacy.
+Web-based open-source project that allows users to participate in polls and surveys anonymously. The system enables all users to create and manage their own polls while ensuring that all participant responses are securely stored in a database without collecting identifiable personal information. This project focuses on simplicity, transparency, and data privacy.
 
 ## Key objective
 - Provide a seamless interface for creating, managing, and participating in polls.
