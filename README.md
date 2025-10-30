@@ -16,10 +16,10 @@ Web-based open-source project that allows users to participate in polls and surv
 | Week       | Period          | Tasks                                                              |
 | ---------- | --------------- | ------------------------------------------------------------------ |
 | **Week 1** | Oct 28 – Nov 3  | Requirements analysis, project setup, GitHub repository setup      |
-| **Week 2** | Nov 4 – Nov 10  |                                                                    |
-| **Week 3** | Nov 11 – Nov 17 |                                                                    |
-| **Week 4** | Nov 18 – Nov 24 |                                                                    |
-| **Week 5** | Nov 25 – Dec 1  |                                                                    |
+| **Week 2** | Nov 4 – Nov 10  | Basic screen configuration, Firebase connection testing            |
+| **Week 3** | Nov 11 – Nov 17 | Implement voting functionality, limiting one vote per person       |
+| **Week 4** | Nov 18 – Nov 24 | Implementing new voting add-on features                            |
+| **Week 5** | Nov 25 – Dec 1  | Results display and screen improvements                            |
 | **Week 6** | Dec 2 – Dec 9   | System testing, bug fixing, UI refinement                          |
 | **Week 7** | Dec 10 – Dec 17 | Documentation, deployment, and final presentation                  |
 
@@ -43,9 +43,9 @@ Web-based open-source project that allows users to participate in polls and surv
 | ------------------- | --------------------------------------------------------------------------------- |
 | **Frontend**        | JavaScript, HTML5                                                                 |
 | **Backend**         | Node.js                                                                           |
-| **Database**        |                                                                                   |
+| **Database**        | Firebase                                                                          |
 | **Version Control** | Git / GitHub                                                                      |
 | **Deployment**      |                                                                                   |
-| **Optional Tools**  |                                                                                   |
+| **Optional Tools**  | Visual Studio Code                                                                |
 
 <img width="294" height="174" alt="image" src="https://github.com/user-attachments/assets/4b6fb8c6-7462-4ed1-a465-77caeff9ee59" />
