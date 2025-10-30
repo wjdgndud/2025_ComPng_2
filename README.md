@@ -41,7 +41,7 @@ Web-based open-source project that allows users to participate in polls and surv
 ## Required techonology field
 | Category            | Technology                                                                        |
 | ------------------- | --------------------------------------------------------------------------------- |
-| **Frontend**        | JavaScript, HTML5                                                                 |
+| **Frontend**        | JavaScript, HTML5, CSS                                                            |
 | **Backend**         | Node.js                                                                           |
 | **Database**        | Firebase                                                                          |
 | **Version Control** | Git / GitHub                                                                      |
