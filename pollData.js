@@ -16,14 +16,14 @@ import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.4.0/fir
 
 let userUid = null;
 
-// 1️⃣ 익명 로그인
+// 1. 익명 로그인
 export async function initAuth() {
     const userCredential = await signInAnonymously(auth);
     userUid = userCredential.user.uid;
-    console.log("✅ 익명 로그인 성공, UID:", userUid);
+    console.log("익명 로그인 성공, UID:", userUid);
 }
 
-// 2️⃣ 실시간 투표 로드
+// 2. 실시간 투표 로드
 export async function loadPoll() {
     const pollsDiv = document.getElementById("polls");
     const pollsCollection = collection(db, "polls");
@@ -58,14 +58,14 @@ export async function loadPoll() {
     });
 }
 
-// 3️⃣ 투표 처리 함수 (1인 1표)
+// 3. 투표 처리 함수 (1인 1표)
 async function vote(pollId, optionIndex) {
     const pollRef = doc(db, "polls", pollId);
     const voteRef = doc(db, "polls", pollId, "votes", userUid);
 
     const voteSnap = await getDoc(voteRef);
     if (voteSnap.exists()) {
-        alert("이미 투표하셨습니다! ✅");
+        alert("이미 투표하셨습니다!");
         return;
     }
 
@@ -82,7 +82,7 @@ async function vote(pollId, optionIndex) {
             transaction.update(pollRef, { votes: newVotes });
             transaction.set(voteRef, { option: optionIndex, timestamp: new Date() });
         });
-        alert("투표 완료! 🎉");
+        alert("투표 완료!");
     } catch (error) {
         console.error("투표 중 오류 발생: ", error);
         alert("투표 중 오류가 발생했습니다.");
