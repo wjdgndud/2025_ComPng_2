@@ -26,9 +26,9 @@ export async function initAuth() {
 // 2. 실시간 투표 로드
 export async function loadPoll() {
     const pollsDiv = document.getElementById("polls");
-    const pollsCollection = collection(db, "polls");
+    const q = query(collection(db, "polls"), orderBy("createdAt", "desc"));
 
-    onSnapshot(pollsCollection, (snapshot) => {
+    onSnapshot(q, (snapshot) => {
         pollsDiv.innerHTML = ""; // 화면 초기화
 
         if (snapshot.empty) {
