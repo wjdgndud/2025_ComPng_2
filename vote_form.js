@@ -1,4 +1,7 @@
 // vote_form.js
+
+
+
 import { createPoll } from "./pollData.js";
 
 const MAX_OPTIONS = 10;
