@@ -1,8 +1,8 @@
 // pollData.js
 import { db, auth } from "./firebaseConfig.js";
 import {
-    collection,
-    doc,
+    collection, 
+    doc, 
     getDoc,
     setDoc,
     onSnapshot,
@@ -54,7 +54,7 @@ export async function loadPoll() {
             });
 
             pollsDiv.appendChild(pollContainer);
-        });
+        }); 
     });
 }
 
