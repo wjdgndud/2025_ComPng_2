@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Anonymous Voting System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Anonymous Voting System</h2>
+
+    <div id="create-poll-section">
+        <h3>새 투표 만들기</h3>
+        <form id="create-poll-form" class="borderRed">
+            <input type="text" id="poll-question" placeholder="질문 내용을 입력하세요." required>
+            <input type="text" id="poll-options" placeholder="항목을 콤마(,)로 구분하여 입력하세요 (예: 항목1, 항목2)" required>
+            <button type="submit">투표 생성</button>
+        </form>
+    </div>
+    
+    <hr>
+
+    <div id="polls"></div>
+
+    <hr>
+
+    <script type="module">
+        import { initAuth, loadPoll, createPoll } from "./pollData.js";
+
+        // 페이지 로드 시 실행
+        async function main() {
+            await initAuth();
+            await loadPoll();
+
+            document.getElementById("create-poll-form").addEventListener("submit", async(e) => {
+                e.preventDefault(); // 페이지 새로고침 방지
+
+                const questionInput = document.getElementById("poll-question");
+                const optionsInput = document.getElementById("poll-options");
+
+                const question = questionInput.value;
+                const options = optionsInput.value.split(",").map(opt => opt.trim());
+
+                if (question && options.length > 1) {
+                    try {
+                        await createPoll(question, options);
+                        alert("새 투표가 생성되었습니다.");
+                        questionInput.value = "";
+                        optionsInput.value = "";
+                    } catch(error) {
+                        console.log("투표 생성 오류: ", error);
+                        alert("투표 생생에 실패했습니다.");
+                    }
+                } else {
+                    alert("질문과 2개 이상의 항목을 입력해주세요.");
+                }
+            });
+        }
+
+        main();
+    </script>
+</body>
+</html>
