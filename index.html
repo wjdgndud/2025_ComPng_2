@@ -10,7 +10,7 @@
 
     <div id="create-poll-section">
         <h3>새 투표 만들기</h3>
-        <form id="create-poll-form" class="borderRed">
+        <form id="create-poll-form">
             <input type="text" id="poll-question" placeholder="질문 내용을 입력하세요." required>
             <input type="text" id="poll-options" placeholder="항목을 콤마(,)로 구분하여 입력하세요 (예: 항목1, 항목2)" required>
             <button type="submit">투표 생성</button>
@@ -19,7 +19,7 @@
     
     <hr>
 
-    <div id="polls"></div>
+    <div id="polls">
         <div class="poll-container">
             <h3>투표 제목</h3>
             <div class="poll-options">
@@ -28,6 +28,8 @@
                 <button>항목3 (0표)</button>
             </div>
         </div>
+    </div>
+
     <hr>
 
     <script type="module">
@@ -81,7 +83,7 @@
                     optionsInput.value = "";
                 } catch(error) {
                     console.log("투표 생성 오류: ", error);
-                    alert("투표 생생에 실패했습니다.");
+                    alert("투표 생성에 실패했습니다.");
                 }
             });
         }
