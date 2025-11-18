@@ -60,14 +60,19 @@ export async function loadPoll() {
             pollContainer.className = "poll-container";
             pollContainer.innerHTML = `<h3>${data.question}</h3>`;
 
+            const optionContainer = document.createElement("div");
+            optionContainer.className = "poll-options";
+
             // 버튼 생성
             data.options.forEach((opt, index) => {
                 const btn = document.createElement("button");
                 btn.textContent = `${opt} (${data.votes[index]}표)`;
+                btn.className = "poll-options button";
                 btn.onclick = () => vote(pollId, index);
-                pollContainer.appendChild(btn);
+                optionContainer.appendChild(btn);
             });
 
+            pollContainer.appendChild(optionContainer);
             pollsDiv.appendChild(pollContainer);
         }); 
     });
