@@ -37,55 +37,56 @@
 
         // 페이지 로드 시 실행
         async function main() {
-            await initAuth();
-            await loadPoll();
+            try {
+                await initAuth();
+                await loadPoll();
 
-            document.getElementById("create-poll-form").addEventListener("submit", async(e) => {
-                e.preventDefault(); // 페이지 새로고침 방지
+                document.getElementById("create-poll-form").addEventListener("submit", async(e) => {
+                    e.preventDefault(); // 페이지 새로고침 방지
 
-                const questionInput = document.getElementById("poll-question");
-                const optionsInput = document.getElementById("poll-options");
+                    const questionInput = document.getElementById("poll-question");
+                    const optionsInput = document.getElementById("poll-options");
 
-                const question = questionInput.value;
-                const options = optionsInput.value.split(",").map(opt => opt.trim());
+                    const question = questionInput.value;
+                    const options = optionsInput.value.split(",").map(opt => opt.trim());
 
-                if (!question || question.trim().length === 0) {
-                    alert("질문을 입력해주세요.");
-                    return;
-                }
-
-                if (question.length > 50) {
-                    alert("질문은 50자 이하로 입력해주세요.");
-                    return;
-                }
-
-                if (options.length < 2) {
-                    alert("최소 2개 이상의 항목을 입력해주세요.");
-                    return;
-                }
-
-                if (options.length > 10) {
-                    alert("항목은 10개 이하로 입력해주세요.");
-                    return;
-                }
-
-                for (let opt of options) {
-                    if (opt.length > 20) {
-                        alert("항목은 20자 이하로 입력해주세요.");
+                    if (!question || question.trim().length === 0) {
+                        alert("질문을 입력해주세요.");
                         return;
                     }
-                }
+                    if (question.length > 50) {
+                        alert("질문은 50자 이하로 입력해주세요.");
+                        return;
+                    }
+                    if (options.length < 2) {
+                        alert("최소 2개 이상의 항목을 입력해주세요.");
+                        return;
+                    }
+                    if (options.length > 10) {
+                        alert("항목은 10개 이하로 입력해주세요.");
+                        return;
+                    }
+                    for (let opt of options) {
+                        if (opt.length > 20) {
+                            alert("항목은 20자 이하로 입력해주세요.");
+                            return;
+                        }
+                    }
 
-                try {
-                    await createPoll(question, options);
-                    alert("새 투표가 생성되었습니다.");
-                    questionInput.value = "";
-                    optionsInput.value = "";
-                } catch(error) {
-                    console.log("투표 생성 오류: ", error);
-                    alert("투표 생성에 실패했습니다.");
-                }
-            });
+                    try {
+                        await createPoll(question, options);
+                        alert("새 투표가 생성되었습니다.");
+                        questionInput.value = "";
+                        optionsInput.value = "";
+                    } catch(error) {
+                        console.log("투표 생성 오류: ", error);
+                        alert("투표 생성에 실패했습니다.");
+                    }
+                });
+            } catch (error) {
+                console.log("인증 또는 앱 초기화 실패:", error);
+                document.getElementById("polls").innerHTML = "오류: 앱을 초기화할 수 없습니다. 페이지를 새로고침 해주세요.";
+            }
         }
 
         main();

@@ -12,15 +12,30 @@ import {
     orderBy,
     serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 let userUid = null;
 
 // 1. 익명 로그인
-export async function initAuth() {
-    const userCredential = await signInAnonymously(auth);
-    userUid = userCredential.user.uid;
-    console.log("익명 로그인 성공, UID:", userUid);
+export function initAuth() {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                unsubscribe();
+                userUid = user.uid;
+                console.log("인증 상태 확인됨, UID:", userUid);
+                resolve(user);
+            } else {
+                try {
+                    console.log("...인증 정보 없음, 익명 로그인 시도...");
+                    await signInAnonymously(auth);
+                } catch (error) {
+                    console.error("익명 로그인 실패: ", error);
+                    reject(error);
+                }
+            }
+        });
+    });
 }
 
 // 2. 실시간 투표 로드
