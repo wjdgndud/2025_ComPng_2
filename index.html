@@ -4,42 +4,65 @@
     <meta charset="UTF-8">
     <title>Anonymous Voting System</title>
     <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 <body>
     <h2>Anonymous Voting System</h2>
 
     <div id="create-poll-section">
-        <h3>새 투표 만들기</h3>
+        <h3>📝 새 투표 만들기</h3>
         <form id="create-poll-form">
-            <input type="text" id="poll-question" placeholder="질문 내용을 입력하세요.">
+            <input type="text" id="poll-question" placeholder="질문 내용을 입력하세요." required>
+            
+            <div style="margin: 10px 0 5px; font-size: 14px; font-weight: bold;">추천 태그:</div>
+            <div id="recommended-tags-container" style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;">
+                <!-- 추천 태그 버튼들이 여기에 동적으로 추가 -->
+            </div>
+            
+            <input type="text" id="poll-tags" placeholder="태그 입력 (추천 태그 클릭 또는 직접 입력)" required>
+            <p style="font-size: 13px; color: #555; margin-top: 5px; margin-bottom: 15px; background-color: #f1f1f1; padding: 10px; border-radius: 4px; line-height: 1.6;">
+                💡 <strong>작성 팁:</strong> <span style="color: #d32f2f">대분류</span>, <span style="color: #1976d2">소분류</span> 순서로 적어보세요!<br>
+                추천 태그에 없더라도 <strong>본인이 원하는 태그를 자유롭게 직접 입력</strong>할 수 있습니다.<br>
+                예시: <strong>IT, 프론트엔드, React</strong> (최대 5개, 10자 이내)
+            </p>
 
-            <button type="submit">투표 만들기</button>
+            <button type="submit">투표 생성</button>
         </form>
     </div>
     
     <hr>
 
-    <div id="polls" class="scroll-list_wrp">
+    <div id="graph-section">
+        <h3>🔎 투표 주제지도</h3>
+        <p style="font-size: 13px; color: gray; margin-top: -10px;">주제를 클릭하면 관련 투표만 볼 수 있습니다.</p>
         
+        <div id="network">
+            <!-- 그래프가 여기에 렌더링 -->
+        </div>
+        
+        <button id="reset-filter-btn" class="graph-btn">🔄 전체 목록 다시 보기</button>
     </div>
-
     <hr>
+
+    <h3>🗳️ 진행 중인 투표들</h3>
+    <div id="polls" class="scroll-list_wrp">
+        <!-- 투표 항목들이 여기에 동적으로 추가 -->
+    </div>
 
     <script type="module">
         import "./vote_form.js";
+        import "./graph.js";  // 그래프 로직 실행
         import { initAuth, loadPoll } from "./pollData.js";
 
-        // 페이지 로드 시 실행
         async function main() {
             try {
                 await initAuth();
                 await loadPoll();
             } catch (error) {
-                console.log("인증 또는 앱 초기화 실패:", error);
-                document.getElementById("polls").innerHTML = "오류: 앱을 초기화할 수 없습니다. 페이지를 새로고침 해주세요.";
+                console.error("초기화 실패:", error);
+                document.getElementById("polls").innerHTML = "앱을 로딩하는 중 오류가 발생했습니다.";
             }
         }
-
         main();
     </script>
 </body>

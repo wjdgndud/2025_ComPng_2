@@ -67,9 +67,17 @@ export async function loadPoll() {
             const data = pollDoc.data();
             const pollId = pollDoc.id;
 
+            const tags = data.tags || [];
+            const tagsDisplay = tags.map(t => `#${t}`).join(" ");
+            const tagsAttr = tags.join(",");
+
             const pollContainer = document.createElement("div");
             pollContainer.className = "poll-container";
-            pollContainer.innerHTML = `<h3>${data.question}</h3>`;
+            pollContainer.setAttribute("data-tags", tagsAttr);
+            pollContainer.innerHTML = `
+                <h3>${data.question}</h3>
+                <small style="color: #007bff; font-weight: bold;">${tagsDisplay}</small>
+            `;
 
             const optionContainer = document.createElement("div");
             optionContainer.className = "poll-options";
@@ -132,7 +140,7 @@ async function vote(pollId, optionIndex) {
 }
 
 // 새 투표 생성 함수
-export async function createPoll(question, options) {
+export async function createPoll(question, options, tags) {
     const pollsCollection = collection(db, "polls");
 
     const initialVotes = new Array(options.length).fill(0);
@@ -142,5 +150,23 @@ export async function createPoll(question, options) {
         options: options,
         votes: initialVotes,
         createdAt: serverTimestamp(),
+        tags: tags
+    });
+}
+
+// 그래프용 데이터
+export function listenForGraphData(callback) {
+    const q = query(collection(db, "polls"), orderBy("createdAt", "desc"))
+    onSnapshot(q, (snapshot) => {
+        const pollsData = [];
+        snapshot.docs.forEach((doc) => {
+            const data = doc.data();
+            pollsData.push({
+                id: doc.id,
+                question: data.question,
+                tags: data.tags || []
+            });
+        });
+        callback(pollsData);
     });
 }

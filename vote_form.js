@@ -2,12 +2,14 @@
 import { createPoll } from "./pollData.js";
 
 const MAX_OPTIONS = 10;
+const MAX_TAGS = 5;
 
-// ====== 기존 폼 엘리먼트 가져오기 ======
 const form = document.getElementById("create-poll-form");
 const questionInput = document.getElementById("poll-question");
+const tagsInput = document.getElementById("poll-tags");
+const tagsContainer = document.getElementById("recommended-tags-container");
 
-// ====== 새 컨테이너 추가 ======
+// ====== 새 컨테이너 추가 (옵션 입력용) ======
 const optionsContainer = document.createElement("div");
 optionsContainer.id = "dynamic-options-container";
 questionInput.parentNode.insertBefore(optionsContainer, questionInput.nextElementSibling);
@@ -20,7 +22,15 @@ form.insertBefore(addButton, form.querySelector('button[type="submit"]'));
 // ====== 옵션 입력 관리 ======
 let optionCount = 0;
 
-function createOptionInput() {
+// ▼▼▼ [수정] 추천 태그 목록 확장 (18개) ▼▼▼
+const RECOMMENDED_TAGS = [
+    "IT", "게임", "음식", "여행", "스포츠", 
+    "음악", "영화", "책", "패션", "학교", 
+    "연애", "고민", "정치", "경제", "진로", 
+    "반려동물", "건강", "취미"
+];
+
+function createOptionInput(value = "") {
     if (optionCount >= MAX_OPTIONS) {
         alert(`옵션은 최대 ${MAX_OPTIONS}개까지만 추가할 수 있습니다.`);
         return;
@@ -33,7 +43,8 @@ function createOptionInput() {
     input.type = "text";
     input.placeholder = `옵션 ${optionCount + 1}`;
     input.maxLength = 20;
-    input.value = "";
+    input.value = value;
+    
     wrapper.appendChild(input);
 
     if (optionCount > 1) {
@@ -59,13 +70,37 @@ function updatePlaceholders() {
     });
 }
 
-// ====== 초기 2개 생성 ======
+// 초기 옵션 2개 생성
 createOptionInput();
 createOptionInput();
 
 addButton.addEventListener("click", () => createOptionInput());
 
-// ====== 기존 form 이벤트 가로채기 ======
+// ====== 추천 태그 버튼 생성 ======
+RECOMMENDED_TAGS.forEach(tag => {
+    const tagBtn = document.createElement("button");
+    tagBtn.type = "button";
+    tagBtn.textContent = `#${tag}`;
+    
+    // 버튼 디자인
+    tagBtn.style.cssText = "padding: 5px 10px; font-size: 13px; background-color: #e0f7fa; border: 1px solid #00acc1; border-radius: 15px; color: #006064; cursor: pointer;";
+    tagBtn.onmouseover = () => tagBtn.style.backgroundColor = "#b2ebf2";
+    tagBtn.onmouseout = () => tagBtn.style.backgroundColor = "#e0f7fa";
+
+    tagBtn.onclick = () => {
+        const currentVal = tagsInput.value.trim();
+        if (currentVal.length > 0) {
+            if(!currentVal.includes(tag)) {
+                tagsInput.value = currentVal + ", " + tag;
+            }
+        } else {
+            tagsInput.value = tag;
+        }
+    };
+    tagsContainer.appendChild(tagBtn);
+});
+
+// ====== 폼 제출 이벤트 ======
 form.onsubmit = async (e) => {
     e.preventDefault();
 
@@ -75,28 +110,53 @@ form.onsubmit = async (e) => {
         .filter((v) => v.length > 0);
 
     if (!question || question.length > 50) {
-        alert("질문은 1자 이상 50자 이하로 입력해주세요.");
+        alert("질문은 50자 이하로 입력해주세요.");
         return;
     }
-
     if (options.length < 2 || options.length > MAX_OPTIONS) {
-        alert(`옵션은 2개 이상 최대 ${MAX_OPTIONS}개 이하로 입력해주세요.`);
+        alert(`옵션은 2개 이상 ${MAX_OPTIONS}개 이하로 입력해주세요.`);
         return;
     }
-
     if (options.some((opt) => opt.length > 20)) {
         alert("옵션은 20자 이하로 입력해주세요.");
         return;
     }
 
+    const tagsStr = tagsInput.value.trim();
+    if (!tagsStr) {
+        alert("태그를 입력하거나 추천 태그를 선택해주세요.");
+        return;
+    }
+    const tags = tagsStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
+
+    if (tags.length > MAX_TAGS) {
+        alert(`태그는 최대 ${MAX_TAGS}개까지만 입력할 수 있습니다. 핵심적인 태그만 입력해주세요.`);
+        return;
+    }
+
+    for (const tag of tags) {
+        if (tag.length > 10) {
+            alert("태그는 10자 이하로 입력해주세요.");
+            return;
+        }
+
+        if (/[^a-zA-Z0-9가-힣\s]/.test(tag)) {
+            alert(`태그 '${tag}'에는 특수문자를 사용할 수 없습니다. (한글, 영문, 숫자만 가능)`);
+            return;
+        }
+    }
+
     try {
-        await createPoll(question, options);
+        await createPoll(question, options, tags);
         alert("새 투표가 생성되었습니다.");
+        
+        // 초기화
         questionInput.value = "";
         optionsContainer.innerHTML = "";
         optionCount = 0;
         createOptionInput();
         createOptionInput();
+        tagsInput.value = "";
     } catch (err) {
         console.error("투표 생성 오류:", err);
         alert("투표 생성에 실패했습니다.");
