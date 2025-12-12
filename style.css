@@ -92,6 +92,35 @@ button:hover {
     background-color: #f9f9f9;
     border-radius: 4px;
 }
+
+#chart-wrapper {
+    width: 100%;
+    max-width: 800px;
+    height: 400px;          /* ⭐ 핵심: 높이 고정 */
+    margin: 20px auto;
+}
+
+#voteChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#recommended-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 12px;
+    position: relative;
+    z-index: 20;   /* ⭐ 무조건 필요 */
+}
+
+#create-poll-section {
+    position: relative;
+    z-index: 30;   /* 추천 태그보다 위 */
+    margin-bottom: 30px;
+}
+
+
 /* 컨트롤 버튼 스타일 */
 .graph-btn {
     padding: 8px 12px;
