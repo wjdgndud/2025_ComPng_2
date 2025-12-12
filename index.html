@@ -1,98 +1,86 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Anonymous Voting System</title>
-
-    <!-- 기본 스타일 -->
-    <link rel="stylesheet" href="style.css" />
-
-    <!-- vis-network (주제 지도) -->
-    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-
-    <!-- Chart.js (통계 그래프) -->
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
-
 <body>
     <h2>Anonymous Voting System</h2>
 
-    <!-- ================== 투표 생성 ================== -->
     <div id="create-poll-section">
         <h3>📝 새 투표 만들기</h3>
-
         <form id="create-poll-form">
-            <input
-                type="text"
-                id="poll-question"
-                placeholder="질문 내용을 입력하세요."
-                required
-            />
-
-            <div style="margin: 10px 0 5px; font-size: 14px; font-weight: bold;">
-                추천 태그:
+            <input type="text" id="poll-question" placeholder="질문 내용을 입력하세요." required>
+            
+            <div style="margin: 10px 0 5px; font-size: 14px; font-weight: bold;">추천 태그:</div>
+            <div id="recommended-tags-container" style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;">
+                <!-- 추천 태그 버튼들이 여기에 동적으로 추가 -->
             </div>
-
-            <div
-                id="recommended-tags-container"
-                style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;"
-            ></div>
-
-            <input
-                type="text"
-                id="poll-tags"
-                placeholder="태그 입력 (추천 태그 클릭 또는 직접 입력)"
-                required
-            />
+            
+            <input type="text" id="poll-tags" placeholder="태그 입력 (추천 태그 클릭 또는 직접 입력)" required>
+            <div style="font-size: 13px; color: #555; margin-top: 5px; margin-bottom: 15px; background-color: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; line-height: 1.6;">
+                <strong>💡 태그 작성 가이드</strong>
+                <ul style="margin: 5px 0 0 20px; padding: 0;">
+                    <li>
+                        <span style="background-color: #e3f2fd; color: #1565c0; padding: 2px 4px; border-radius: 3px; font-weight: bold;">자동 분류</span>: 
+                        여러 태그 중 <strong>가장 대중적인(빈도수가 높은) 태그</strong>가 자동으로 <span style="border: 1px solid #555; padding: 0 3px; font-size: 11px;">네모 박스</span>(색상 기준)가 됩니다.
+                    </li>
+                    <li>
+                        <span style="background-color: #fff3e0; color: #e65100; padding: 2px 4px; border-radius: 3px; font-weight: bold;">새로운 주제</span>: 
+                        아직 없는 주제를 등록할 때는 <strong>가장 큰 범위를 첫 번째</strong>에 적어주세요. (예: <em>"신기술, AI"</em>)
+                    </li>
+                    <li>
+                        <strong>작성 예시:</strong> <em>"IT, 개발자, 연봉"</em> (콤마로 구분, 최대 5개)
+                    </li>
+                </ul>
+            </div>
 
             <button type="submit">투표 생성</button>
         </form>
     </div>
+    
+    <hr>
 
-    <hr />
-
-    <!-- ================== 주제 그래프 ================== -->
     <div id="graph-section">
         <h3>🔎 투표 주제지도</h3>
-        <p style="font-size: 13px; color: gray;">
-            주제를 클릭하면 관련 투표만 볼 수 있습니다.
-        </p>
+        <p style="font-size: 13px; color: gray; margin-top: -10px;">주제를 클릭하면 관련 투표만 볼 수 있습니다.</p>
+        
+        <div id="network">
+            <!-- 그래프가 여기에 렌더링 -->
+        </div>
+        
+        <button id="reset-filter-btn" class="graph-btn">🔄 전체 목록 다시 보기</button>
+    </div>
+    <hr>
 
-        <div id="network"></div>
-
-        <button id="reset-filter-btn" class="graph-btn">
-            🔄 전체 목록 다시 보기
-        </button>
+    <h3>🗳️ 진행 중인 투표들</h3>
+    <div id="polls" class="scroll-list_wrp">
+        <!-- 투표 항목들이 여기에 동적으로 추가 -->
     </div>
 
-    <hr />
+    <hr>
 
-    <!-- ================== 통계 그래프 ================== -->
-    <div id="chart-section" style="display: none;">
+    <div id="chart-section">
         <h3>📊 투표 결과 통계</h3>
 
         <select id="chart-type-selector">
             <option value="bar">막대 그래프</option>
             <option value="pie">원형 그래프</option>
-            <option value="doughnut">도넛 그래프</option>
-            <option value="line">라인 그래프</option>
+            <option value="radar">레이더 그래프</option>
         </select>
 
-        <div style="height: 400px; margin-top: 10px;">
+        <div id="chart-wrapper">
             <canvas id="voteChart"></canvas>
         </div>
     </div>
 
-    <hr />
 
-    <!-- ================== 투표 목록 ================== -->
-    <h3>🗳️ 진행 중인 투표들</h3>
-    <div id="polls" class="scroll-list_wrp"></div>
-
-    <!-- ================== JS Modules ================== -->
     <script type="module">
         import "./vote_form.js";
-        import "./graph.js";
+        import "./graph.js";  // 그래프 로직 실행
         import "./chartView.js";
         import { initAuth, loadPoll } from "./pollData.js";
 
@@ -100,13 +88,11 @@
             try {
                 await initAuth();
                 await loadPoll();
-            } catch (e) {
-                console.error("초기화 실패:", e);
-                document.getElementById("polls").innerText =
-                    "앱을 로딩하는 중 오류가 발생했습니다.";
+            } catch (error) {
+                console.error("초기화 실패:", error);
+                document.getElementById("polls").innerHTML = "앱을 로딩하는 중 오류가 발생했습니다.";
             }
         }
-
         main();
     </script>
 </body>
