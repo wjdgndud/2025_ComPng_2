@@ -5,31 +5,19 @@ const container = document.getElementById("network");
 const resetBtn = document.getElementById("reset-filter-btn");
 
 let network = null;
+let globalTagColorMap = {}; // 색상 정보 전역 저장
 
-// 1. [디자인] 대분류(추천 태그) 색상 팔레트 (18개로 확장)
-const TAG_COLORS = {
-    "IT": "#2E7D32",       // 진한 초록
-    "게임": "#673AB7",      // 보라
-    "음식": "#E65100",      // 아주 진한 주황
-    "여행": "#0277BD",      // 진한 파랑
-    "스포츠": "#D32F2F",    // 빨강
-    "음악": "#1565C0",      // 남색
-    "영화": "#AD1457",      // 진한 분홍
-    "책": "#5D4037",        // 갈색
-    "패션": "#7B1FA2",      // 자주
-    "학교": "#00695C",      // 청록
-    "연애": "#F50057",      // 핫핑크
-    "고민": "#546E7A",      // 블루그레이
-    "정치": "#37474F",      // 진한 회색
-    "경제": "#F9A825",      // 골드/노랑 (글씨 잘 보이게 어두운 노랑)
-    "진로": "#283593",      // 인디고
-    "반려동물": "#8D6E63",  // 연갈색
-    "건강": "#558B2F",      // 올리브
-    "취미": "#EF6C00"       // 오렌지
-};
+const BOX_THRESHOLD = 2; // 박스(Box) 태그 최소 빈도수
 
-// 소분류 기본 색상
-const DEFAULT_COLOR = "#B0BEC5"; 
+// 해시 색상 생성 (파스텔톤)
+function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsl(${h}, 70%, 45%)`; 
+}
 
 // vis-network 옵션
 const options = {
@@ -46,101 +34,135 @@ const options = {
     physics: {
         stabilization: false,
         barnesHut: { 
-            gravitationalConstant: -5000, 
+            gravitationalConstant: -6000, 
             springConstant: 0.02, 
-            springLength: 130 
+            springLength: 140 
         }
     },
     interaction: { hover: true }
 };
 
+// 그래프 데이터 수신 및 그리기
 listenForGraphData((polls) => {
-    drawCoOccurrenceGraph(polls);
+    drawTopicNetwork(polls);
 });
 
-function drawCoOccurrenceGraph(polls) {
+// 노드-에지 그래프 그리기
+function drawTopicNetwork(polls) {
     const nodesMap = new Map();
     const edgesMap = new Map();
     const tagCounts = {}; 
 
-    // 1. 빈도수 집계
+    // --- 1. 전체 태그 빈도수 집계 ---
     polls.forEach(poll => {
         (poll.tags || []).forEach(tag => {
             tagCounts[tag] = (tagCounts[tag] || 0) + 1;
         });
     });
 
-    // 2. 색상 상속 계산
-    const tagColorMap = {};
+    // --- 2. 부모/자식 관계 재정립 (빈도수 기반 Sorting) ---
+    const realParentsSet = new Set(); // 박스(Box)가 될 태그들
+    const tagColorMap = {};           // 태그별 색상 저장
+
     polls.forEach(poll => {
-        const tags = poll.tags || [];
-        let majorColor = null;
-        for (const tag of tags) {
-            if (TAG_COLORS[tag]) { majorColor = TAG_COLORS[tag]; break; }
+        let tags = [...(poll.tags || [])]; // 원본 배열 복사
+        if (tags.length === 0) return;
+
+        // 빈도수가 높은 순서대로 태그 재정렬
+        tags.sort((a, b) => {
+            const countDiff = tagCounts[b] - tagCounts[a]; // 빈도수 내림차순
+            if (countDiff !== 0) return countDiff;
+            return a.localeCompare(b); // 빈도수 같으면 가나다순 (일관성 유지)
+        });
+
+        // 정렬 후 첫 번째 태그가 이 그룹의 부모가 됨
+        const parent = tags[0];
+        
+        // 자식이 있거나(>1), 빈도수가 높으면(>=3) 박스 처리
+        if (tags.length > 1 || tagCounts[parent] >= BOX_THRESHOLD) {
+            realParentsSet.add(parent);
         }
-        if (majorColor) {
-            tags.forEach(tag => {
-                if (!TAG_COLORS[tag] && !tagColorMap[tag]) tagColorMap[tag] = majorColor;
+
+        // 색상 할당 (부모 색상 생성 -> 자식들에게 상속)
+        if (!tagColorMap[parent]) {
+            tagColorMap[parent] = stringToColor(parent);
+        }
+        const parentColor = tagColorMap[parent];
+
+        // 자식들(1번 인덱스부터) 처리
+        for (let i = 1; i < tags.length; i++) {
+            const child = tags[i];
+            // 자식은 아직 색이 없으면 부모 색을 따름
+            if (!tagColorMap[child]) {
+                tagColorMap[child] = parentColor;
+            }
+        }
+    });
+
+    // 빈도수 높은 순으로 정렬되지 않은 태그들(고립된 태그 등) 색상 채우기
+    Object.keys(tagCounts).forEach(tag => {
+        if (!tagColorMap[tag]) tagColorMap[tag] = stringToColor(tag);
+    });
+    
+    globalTagColorMap = tagColorMap; // 전역 저장
+
+    // --- 3. 노드 생성 ---
+    Object.keys(tagCounts).forEach(tag => {
+        const count = tagCounts[tag];
+        const isRealParent = realParentsSet.has(tag);
+        const color = tagColorMap[tag];
+
+        if (isRealParent) {
+            // [BOX] 빈도수가 높아 대장으로 선정된 태그
+            nodesMap.set(tag, { 
+                id: tag, 
+                label: tag, 
+                shape: "box", 
+                color: { background: color, border: color },
+                font: { 
+                    size: 20 + (count * 1.5), 
+                    color: "#ffffff", 
+                    face: "bold arial" 
+                },
+                margin: 10,
+                value: 50 + count
+            });
+        } else {
+            // [DOT] 빈도수가 낮아 하위로 들어간 태그
+            nodesMap.set(tag, { 
+                id: tag, 
+                label: tag, 
+                shape: "dot",
+                color: color, 
+                size: 15 + (count * 3), // 인기가 많아지면 닷도 커짐
+                font: { 
+                    size: 14, 
+                    color: "#333", 
+                    strokeWidth: 4, 
+                    strokeColor: "#ffffff" 
+                }
             });
         }
     });
 
-    // 3. 노드 생성 (가시성 핵심 로직)
+    // --- 4. 에지 생성 (재정렬된 기준으로 연결) ---
     polls.forEach(poll => {
-        const tags = poll.tags || [];
-        tags.forEach(tag => {
-            if (!nodesMap.has(tag)) {
-                const count = tagCounts[tag];
-                const isMajor = TAG_COLORS.hasOwnProperty(tag);
-                
-                // 색상 결정
-                const color = TAG_COLORS[tag] || tagColorMap[tag] || DEFAULT_COLOR;
-                
-                // ▼▼▼ [핵심 변경] 대분류 노드 디자인 강화 ▼▼▼
-                if (isMajor) {
-                    // 대분류: 'box' 모양 (글자가 박스 안에 들어감 -> 가시성 최고)
-                    nodesMap.set(tag, { 
-                        id: tag, 
-                        label: tag, 
-                        shape: "box",          // 박스 형태
-                        color: {
-                            background: color, // 배경색
-                            border: color      // 테두리색
-                        },
-                        font: { 
-                            size: 20 + (count * 2), // 클수록 글자도 커짐
-                            color: "#ffffff",       // 흰색 글씨
-                            face: "bold arial"      // 굵게
-                        },
-                        margin: 10, // 박스 여백
-                        value: 50 + count // 물리엔진용 무게감
-                    });
-                } else {
-                    // 소분류: 기존 'dot' 형태 유지 (작고 귀엽게)
-                    nodesMap.set(tag, { 
-                        id: tag, 
-                        label: tag, 
-                        shape: "dot",
-                        color: color, 
-                        size: 15 + (count * 3),
-                        font: { 
-                            size: 14, 
-                            color: "#333", // 글자는 검정
-                            strokeWidth: 4, // 흰색 테두리 (가독성 확보)
-                            strokeColor: "#ffffff"
-                        }
-                    });
-                }
-            }
+        let tags = [...(poll.tags || [])];
+        // 에지 연결할 때도 빈도수 순서대로 정렬
+        tags.sort((a, b) => {
+            const diff = tagCounts[b] - tagCounts[a];
+            return diff !== 0 ? diff : a.localeCompare(b);
         });
 
-        // 엣지 생성
         for (let i = 0; i < tags.length; i++) {
             for (let j = i + 1; j < tags.length; j++) {
-                const source = tags[i];
-                const target = tags[j];
-                const edgeId = [source, target].sort().join("-");
-                if (!edgesMap.has(edgeId)) edgesMap.set(edgeId, { from: source, to: target });
+                const source = tags[i]; // 빈도수 높은 쪽 (부모)
+                const target = tags[j]; // 빈도수 낮은 쪽 (자식)
+                const edgeId = `${source}-${target}`; // 방향성 있게 ID 생성
+                
+                if (!edgesMap.has(edgeId)) {
+                    edgesMap.set(edgeId, { from: source, to: target });
+                }
             }
         }
     });
@@ -158,6 +180,7 @@ function drawCoOccurrenceGraph(polls) {
     });
 }
 
+// 특정 태그로 필터링
 function filterPollsByTag(targetTag) {
     const allPolls = document.querySelectorAll(".poll-container");
     resetBtn.style.display = "inline-block";
@@ -167,9 +190,8 @@ function filterPollsByTag(targetTag) {
         const tags = tagsAttr ? tagsAttr.split(",") : [];
 
         if (tags.includes(targetTag)) {
-            div.style.display = "flex"; // 레이아웃 유지
-            // 선택된 노드의 색상을 찾아서 테두리에 적용
-            const color = TAG_COLORS[targetTag] || "#555";
+            div.style.display = "flex"; 
+            const color = globalTagColorMap[targetTag] || stringToColor(targetTag);
             div.style.border = `2px solid ${color}`;
         } else {
             div.style.display = "none";
@@ -178,6 +200,7 @@ function filterPollsByTag(targetTag) {
     });
 }
 
+// 리셋 버튼 클릭 시 필터 해제
 resetBtn.addEventListener("click", () => {
     document.querySelectorAll(".poll-container").forEach(d => {
         d.style.display = "flex";

@@ -101,5 +101,37 @@ button:hover {
     cursor: pointer;
     font-size: 14px;
 }
-#back-to-root-btn { background-color: #555; color: white; display: none; }
 #reset-filter-btn { background-color: #007bff; color: white; display: none; margin-top: 10px; }
+
+/* 수정/삭제 버튼 그룹 */
+.poll-manage-btns {
+    display: flex;
+    gap: 5px;
+    margin-left: 10px;
+    align-items: flex-start; /* 버튼 높이 맞춤 */
+}
+
+/* 수정 버튼 */
+.edit-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+    background-color: #FF9800; /* 주황색 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+    background-color: #F44336; /* 빨간색 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn:hover { background-color: #F57C00; }
+.delete-btn:hover { background-color: #D32F2F; }
