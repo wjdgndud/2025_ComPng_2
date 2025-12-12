@@ -13,12 +13,23 @@ import {
     serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { load } from "https://esm.sh/@fingerprintjs/fingerprintjs@4";
 
 let userUid = null;
+let visitorId = null;
 
-// 1. 익명 로그인
+// 익명 로그인
 export function initAuth() {
     return new Promise((resolve, reject) => {
+        // Fingerprint 로드
+        load()
+            .then(fp => fp.get())
+            .then(result => {
+                visitorId = result.visitorId;
+                console.log("방문자 식별자 생성됨, Visitor ID:", visitorId);
+            });
+
+        // Firebase 익명 인증
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 unsubscribe();
@@ -38,7 +49,7 @@ export function initAuth() {
     });
 }
 
-// 2. 실시간 투표 로드
+// 실시간 투표 로드
 export async function loadPoll() {
     const pollsDiv = document.getElementById("polls");
     const q = query(collection(db, "polls"), orderBy("createdAt", "desc"));
@@ -78,37 +89,49 @@ export async function loadPoll() {
     });
 }
 
-// 3. 투표 처리 함수 (1인 1표)
+// 투표 처리 함수 (1인 1표)
 async function vote(pollId, optionIndex) {
-    const pollRef = doc(db, "polls", pollId);
-    const voteRef = doc(db, "polls", pollId, "votes", userUid);
-
-    const voteSnap = await getDoc(voteRef);
-    if (voteSnap.exists()) {
-        alert("이미 투표하셨습니다!");
+    if (!userUid || !visitorId) {
+        alert("인증이 완료되지 않았습니다. 잠시 후 다시 시도해주세요.");
         return;
     }
+
+    const pollRef = doc(db, "polls", pollId);
+    const voteRef = doc(db, "polls", pollId, "votes", userUid);
+    const fpRef = doc(db, "polls", pollId, "fingerprints", visitorId);
 
     try {
         await runTransaction(db, async (transaction) => {
             const pollSnap = await transaction.get(pollRef);
+            const voteSnap = await transaction.get(voteRef);
+            const fpSnap = await transaction.get(fpRef);
+
             if (!pollSnap.exists()) {
-                throw new Error("투표가 존재하지 않습니다.");
+                throw new Error("존재하지 않는 투표입니다.");
             }
+            if (voteSnap.exists()) {
+                throw new Error("이미 투표한 사용자입니다.");
+            }
+            if (fpSnap.exists()) {
+                throw new Error("이 기기에서 이미 투표가 완료되었습니다.");
+            }
+
             const pollData = pollSnap.data();
             const newVotes = [...pollData.votes];
             newVotes[optionIndex]++;
 
             transaction.update(pollRef, { votes: newVotes });
             transaction.set(voteRef, { option: optionIndex, timestamp: new Date() });
+            transaction.set(fpRef, { votedBy: userUid, timestamp: new Date() });
         });
         alert("투표 완료!");
     } catch (error) {
-        console.error("투표 중 오류 발생: ", error);
-        alert("투표 중 오류가 발생했습니다.");
+        console.error("투표 실패:", error);
+        alert(error.message);
     }
 }
 
+// 새 투표 생성 함수
 export async function createPoll(question, options) {
     const pollsCollection = collection(db, "polls");
 
