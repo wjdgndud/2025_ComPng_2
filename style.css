@@ -381,3 +381,20 @@ button:hover {
     right: 0;
     top: 0;
 }
+
+
+#chart-section {
+    display: none; /* 일단 숨김 (JS가 필요할 때 켜줌) */
+}
+
+/* Main title design */
+
+h2 {
+    text-align: center;  /* ★ 핵심: 텍스트 가운데 정렬 */
+    margin-top: 40px;    /* 위쪽 여백을 좀 주어서 시원하게 */
+    margin-bottom: 30px; /* 아래쪽 콘텐츠와 간격 벌리기 */
+    
+    color: #2c3e50;      /* 너무 새카만 색보다는 진한 네이비톤이 고급스럽습니다 */
+    font-size: 2rem;     /* 글자 크기도 조금 키움 */
+    font-weight: 700;    /* 두껍게 강조 */
+}
