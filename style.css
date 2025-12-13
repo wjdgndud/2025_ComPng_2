@@ -35,7 +35,11 @@ button:hover {
 
 .scroll-list_wrp{
     width: 100%;
-    height: 700px;
+
+    /*[변경] 높이 수정 (기존 700px -> 450px)*/
+    /*절반~2/3 수준으로 줄였습니다. */
+    height: 450px;
+
     overflow: auto;
     box-shadow: 0px 7px 46px 0px rgba(0, 0, 0, 0.3);
     background: #1c2e4a;
@@ -56,24 +60,51 @@ button:hover {
     margin-right: auto;
 }
 
+/* =========================================
+   [UPDATE] 투표 옵션 버튼 디자인 (세련된 스타일)
+   ========================================= */
+
 .poll-options button {
-    flex: 0 0 150px;
-    padding: 10px;
-    border: 1px solid #007bff;
-    background-color: white;
-    color: #007bff;
+    /* 1. 레이아웃 & 크기 */
+    flex: 1 1 45%;     
+    padding: 14px 20px; 
+    margin-bottom: 8px;  
+    
+    /* 2. 폰트 스타일 */
+    font-size: 15px;
+    font-weight: 600;    
+    color: #4a6fa5;  
+    
+    /* 3. 기본 배경 및 테두리 (평소 상태) */
+    background-color: #ffffff;
+    border: 1px solid #e1e8ed; 
+    border-radius: 10px;      
+    
+    /* 4. 효과 및 애니메이션 */
     cursor: pointer;
-    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03); 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
 }
 
+/* 마우스를 올렸을 때 (Hover Effect) */
 .poll-options button:hover {
-    flex: 0 0 150px;
-    padding: 10px;
-    border: 1px solid white;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
+    /* 세련된 블루 그라디언트 적용 */
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); /* 시원한 아쿠아 블루 */
+    /* 또는 좀 더 진중한 블루를 원하시면 아래 주석을 풀고 위를 주석 처리 */
+    /*background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%); */
+
+    color: white;             /* 글씨는 흰색으로 반전 */
+    border-color: transparent; /* 테두리는 배경에 녹아들게 제거 */
+    
+    /* 살짝 떠오르는 느낌 + 빛나는 그림자 */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(30, 136, 229, 0.3); 
+}
+
+/* 클릭했을 때 (Active Effect) */
+.poll-options button:active {
+    transform: scale(0.98); /* 살짝 눌리는 느낌 */
+    box-shadow: 0 2px 5px rgba(30, 136, 229, 0.2);
 }
 
 /* 그래프 영역 스타일 */
@@ -135,3 +166,158 @@ button:hover {
 
 .edit-btn:hover { background-color: #F57C00; }
 .delete-btn:hover { background-color: #D32F2F; }
+
+/* 1. 폼 전체 레이아웃 , 여기서부터 추가 */
+#create-poll-section {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+    border: 1px solid #eaeaea;
+    margin-bottom: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#create-poll-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+/* 2. 입력창 (질문, 태그, 옵션) 공통 스타일 */
+#create-poll-form input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* 둥근 모서리 */
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+#create-poll-form input[type="text"]:focus {
+    border-color: #007bff; /* 포커스 시 강조색 */
+    outline: none;
+}
+
+/* 3. 동적 옵션 입력 영역 */
+.option-input {
+    display: flex;
+    gap: 8px; /* 입력창과 삭제버튼 사이 간격 */
+    margin-bottom: 8px;
+}
+
+/* 4. 버튼 디자인 (JS에서 클래스명 add-option-btn, delete-option-btn 부여함) */
+.add-option-btn {
+    background-color: #6c757d; /* 회색 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.delete-option-btn {
+    background-color: #ff5252; /* 빨간색 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0 12px;
+    cursor: pointer;
+    font-size: 12px;
+    flex-shrink: 0; /* 버튼 크기 줄어듦 방지 */
+}
+
+/* 메인 제출 버튼 */
+#create-poll-form button[type="submit"] {
+    width: 100%;
+    background-color: #007bff; /* 파란색 */
+    color: white;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+#create-poll-form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* 5. [중요] 추천 태그 버튼 디자인 (JS 인라인 스타일 대체) */
+#recommended-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.recommend-tag-btn {
+    background-color: #e0f7fa;
+    color: #006064;
+    border: 1px solid #00acc1;
+    border-radius: 20px; /* 캡슐 모양 */
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 마우스 올렸을 때 효과 */
+.recommend-tag-btn:hover {
+    background-color: #b2ebf2;
+    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+
+/* =========================================
+   [NEW] 투표 리스트 내부 정렬 (pollData.js 대응)
+   ========================================= */
+
+/* 헤더 영역 (질문 텍스트 + 수정/삭제 버튼) */
+.poll-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* 버튼은 오른쪽 끝, 텍스트는 나머지 공간 */
+    align-items: flex-start;
+    margin-bottom: 15px;
+    position: relative; /* 정렬 기준점 */
+}
+
+/* 질문과 태그를 감싸는 컨테이너 */
+.poll-header-content {
+    width: 100%;
+    text-align: center; /* ★ 텍스트 가운데 정렬의 핵심 ★ */
+    padding-right: 0;   /* 버튼 공간만큼 패딩이 필요할 수도 있음 (선택사항) */
+}
+
+/* 질문 텍스트 스타일 */
+.poll-question {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* 태그 텍스트 스타일 */
+.poll-tags {
+    display: block; /* 줄바꿈 */
+    color: #007bff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* (참고) 수정/삭제 버튼이 텍스트와 겹치지 않게 하려면 */
+.poll-manage-btns {
+    position: absolute; /* 절대 위치로 우측 상단 고정 */
+    right: 0;
+    top: 0;
+}

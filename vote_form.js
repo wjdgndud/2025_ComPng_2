@@ -17,6 +17,10 @@ questionInput.parentNode.insertBefore(optionsContainer, questionInput.nextElemen
 const addButton = document.createElement("button");
 addButton.type = "button";
 addButton.textContent = "옵션 추가";
+
+// [변경] 디자인을 위해 클래스 추가 (기존에는 없었음)
+addButton.className = "add-option-btn";
+
 form.insertBefore(addButton, form.querySelector('button[type="submit"]'));
 
 // ====== 옵션 입력 관리 ======
@@ -51,6 +55,10 @@ function createOptionInput(value = "") {
         const delBtn = document.createElement("button");
         delBtn.type = "button";
         delBtn.textContent = "삭제";
+
+        // [변경] 삭제 버튼 스타일링을 위한 클래스 추가
+        delBtn.className = "delete-option-btn";
+
         delBtn.addEventListener("click", () => {
             wrapper.remove();
             optionCount--;
@@ -82,10 +90,9 @@ RECOMMENDED_TAGS.forEach(tag => {
     tagBtn.type = "button";
     tagBtn.textContent = `#${tag}`;
     
-    // 버튼 디자인
-    tagBtn.style.cssText = "padding: 5px 10px; font-size: 13px; background-color: #e0f7fa; border: 1px solid #00acc1; border-radius: 15px; color: #006064; cursor: pointer;";
-    tagBtn.onmouseover = () => tagBtn.style.backgroundColor = "#b2ebf2";
-    tagBtn.onmouseout = () => tagBtn.style.backgroundColor = "#e0f7fa";
+    // [변경점] 기존 JS에 있던 style.cssText 및 마우스 이벤트 제거
+    // 대신 CSS 클래스 'recommend-tag-btn'을 추가하여 스타일 파일에서 제어
+    tagBtn.className = "recommend-tag-btn";
 
     tagBtn.onclick = () => {
         const currentVal = tagsInput.value.trim();
