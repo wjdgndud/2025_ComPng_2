@@ -1,5 +1,6 @@
 // pollData.js
 import { db, auth } from "./firebaseConfig.js";
+
 import {
     collection, doc, getDoc, setDoc, deleteDoc, updateDoc,
     onSnapshot, addDoc, runTransaction, query, orderBy, serverTimestamp
@@ -108,7 +109,12 @@ export async function loadPoll() {
                 const voteCount = data.votes && data.votes[index] ? data.votes[index] : 0;
                 btn.textContent = `${opt} (${voteCount}표)`;
                 btn.className = "poll-options button";
-                btn.onclick = () => vote(pollId, index);
+                btn.onclick = async () => {
+                    await vote(pollId, index);
+                    
+                    document.dispatchEvent(new CustomEvent("pollVoted", {detail: pollId}));
+                };
+
                 optionContainer.appendChild(btn);
             });
 
