@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anonymous Voting System</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 <body>
@@ -58,9 +59,28 @@
         <!-- 투표 항목들이 여기에 동적으로 추가 -->
         </div>
 
+    <hr>
+
+    <div id="chart-section">
+        <h3>📊 투표 결과 통계</h3>
+
+        <select id="chart-type-selector">
+            <option value="bar">막대 그래프</option>
+            <option value="pie">원형 그래프</option>
+            <option value="doughnut">도넛 그래프</option>
+            <option value="radar">레이더 그래프</option>
+        </select>
+
+        <div id="chart-wrapper">
+            <canvas id="voteChart"></canvas>
+        </div>
+    </div>
+
+
     <script type="module">
         import "./vote_form.js";
-        import "./graph.js"; // 그래프 로직 실행
+        import "./graph.js";  // 그래프 로직 실행
+        import "./chartView.js";
         import { initAuth, loadPoll } from "./pollData.js";
 
         async function main() {
