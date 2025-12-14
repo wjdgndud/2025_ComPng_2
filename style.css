@@ -392,6 +392,8 @@ h2 {
 }
 
 .result-btn {
+    white-space: nowrap;
+    min-width: 64px;
     padding: 5px 10px;
     font-size: 12px;
     background-color: #3F51B5;
@@ -400,7 +402,7 @@ h2 {
     border-radius: 4px;
     cursor: pointer;
     position: relative;
-    left: -50px;
+    left: -250px;
 }
 
 .result-btn:hover {
