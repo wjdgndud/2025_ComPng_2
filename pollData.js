@@ -65,29 +65,38 @@ export async function loadPoll() {
             pollContainer.className = "poll-container";
             pollContainer.setAttribute("data-tags", tagsAttr);
 
-            // ▼▼▼ [수정된 부분 시작] ▼▼▼
-            
-            // 1. 헤더 영역 (질문 + 태그 + 버튼)
+           
             const headerDiv = document.createElement("div");
-            headerDiv.className = "poll-header"; // CSS 클래스 적용
+            headerDiv.className = "poll-header";
 
-            // 2. 텍스트 영역 (질문 + 태그)
             const contentDiv = document.createElement("div");
-            contentDiv.className = "poll-header-content"; // CSS 클래스 적용
+            contentDiv.className = "poll-header-content";
 
             const questionEl = document.createElement("h3");
-            questionEl.className = "poll-question"; // CSS 클래스 적용
+            questionEl.className = "poll-question";
             questionEl.textContent = data.question;
 
             const tagsEl = document.createElement("small");
-            tagsEl.className = "poll-tags"; // CSS 클래스 적용
+            tagsEl.className = "poll-tags";
             tagsEl.textContent = tagsDisplay; 
 
-            // ▲▲▲ [수정된 부분 끝] ▲▲▲
 
             contentDiv.appendChild(questionEl);
             contentDiv.appendChild(tagsEl);
             headerDiv.appendChild(contentDiv);
+
+            const resultBtn = document.createElement("button");
+            resultBtn.className = "result-btn";
+            resultBtn.textContent = "결과 보기";
+
+            resultBtn.onclick = () => {
+                import("./chartView.js").then(module => {
+                    module.showVoteChart(pollId);
+                });
+            };
+
+            headerDiv.appendChild(resultBtn);
+
 
 
             if (userUid && data.ownerId === userUid) {
