@@ -399,12 +399,8 @@ h2 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.result-btn {
-    white-space: nowrap;
-    min-width: 72px;
-    margin-left: -6px;
+    position: relative;
+    left: -50px;
 }
 
 .result-btn:hover {
