@@ -192,7 +192,7 @@ button:hover {
     background-color: #ffffff;
     padding: 24px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
     border: 1px solid #eaeaea;
     margin-bottom: 40px;
     max-width: 600px;
@@ -390,6 +390,7 @@ h2 {
     font-weight: 700;    
 }
 
+/*
 .result-btn {
     white-space: nowrap;
     min-width: 64px;
@@ -400,10 +401,41 @@ h2 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    position: relative;
-    left: -250px;
+
+    margin-left: 10px;
+    vertical-align: middle;
+}
+*/
+
+.result-btn {
+    position: absolute;   /* 공중 부양 */
+    bottom: 15px;         /* 바닥에서 15px 위로 */
+    left: 20px;          /* 오른쪽 벽에서 20px 안쪽으로 */
+    
+    /* 디자인 */
+    background-color: #3F51B5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    z-index: 10;
 }
 
 .result-btn:hover {
     background-color: #303F9F;
+}
+
+#poll-list li {
+    position: relative;     /* ★ 핵심: 버튼의 가두리 양식장 역할 */
+    padding-bottom: 50px;   /* ★ 핵심: 버튼이 들어갈 바닥 공간 확보 */
+    
+    /* 혹시 기존에 li 스타일이 없다면 아래 내용도 같이 적용됩니다 */
+    background-color: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    list-style: none; 
 }
