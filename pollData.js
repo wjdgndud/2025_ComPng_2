@@ -65,20 +65,25 @@ export async function loadPoll() {
             pollContainer.className = "poll-container";
             pollContainer.setAttribute("data-tags", tagsAttr);
 
+            // ▼▼▼ [수정된 부분 시작] ▼▼▼
+            
+            // 1. 헤더 영역 (질문 + 태그 + 버튼)
             const headerDiv = document.createElement("div");
-            headerDiv.style.cssText = "width: 100%; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;";
+            headerDiv.className = "poll-header"; // CSS 클래스 적용
 
+            // 2. 텍스트 영역 (질문 + 태그)
             const contentDiv = document.createElement("div");
-            contentDiv.style.flex = "1";
+            contentDiv.className = "poll-header-content"; // CSS 클래스 적용
 
             const questionEl = document.createElement("h3");
-            questionEl.style.margin = "0 0 5px 0";
+            questionEl.className = "poll-question"; // CSS 클래스 적용
             questionEl.textContent = data.question;
 
             const tagsEl = document.createElement("small");
-            tagsEl.style.color = "#007bff";
-            tagsEl.style.fontWeight = "bold";
-            tagsEl.textContent = tagsDisplay;
+            tagsEl.className = "poll-tags"; // CSS 클래스 적용
+            tagsEl.textContent = tagsDisplay; 
+
+            // ▲▲▲ [수정된 부분 끝] ▲▲▲
 
             contentDiv.appendChild(questionEl);
             contentDiv.appendChild(tagsEl);

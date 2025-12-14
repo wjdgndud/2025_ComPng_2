@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anonymous Voting System</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,29 +13,25 @@
 
     <div id="create-poll-section">
         <h3>📝 새 투표 만들기</h3>
+        
         <form id="create-poll-form">
+            <label for="poll-question" style="font-weight:bold; display:block; margin-bottom:5px;">질문</label>
             <input type="text" id="poll-question" placeholder="질문 내용을 입력하세요." required>
             
-            <div style="margin: 10px 0 5px; font-size: 14px; font-weight: bold;">추천 태그:</div>
-            <div id="recommended-tags-container" style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;">
+            <div style="margin-top: 20px;">
+                <div style="margin-bottom: 8px; font-size: 14px; font-weight: bold;">추천 태그</div>
+                
+                <div id="recommended-tags-container"></div>
                 <!-- 추천 태그 버튼들이 여기에 동적으로 추가 -->
+
+                <input type="text" id="poll-tags" placeholder="태그 입력 (위 버튼을 클릭하거나 직접 입력)" required>
             </div>
-            
-            <input type="text" id="poll-tags" placeholder="태그 입력 (추천 태그 클릭 또는 직접 입력)" required>
-            <div style="font-size: 13px; color: #555; margin-top: 5px; margin-bottom: 15px; background-color: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; line-height: 1.6;">
+
+            <div style="font-size: 13px; color: #555; background-color: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; margin-top: 5px;">
                 <strong>💡 태그 작성 가이드</strong>
                 <ul style="margin: 5px 0 0 20px; padding: 0;">
-                    <li>
-                        <span style="background-color: #e3f2fd; color: #1565c0; padding: 2px 4px; border-radius: 3px; font-weight: bold;">자동 분류</span>: 
-                        여러 태그 중 <strong>가장 대중적인(빈도수가 높은) 태그</strong>가 자동으로 <span style="border: 1px solid #555; padding: 0 3px; font-size: 11px;">네모 박스</span>(색상 기준)가 됩니다.
-                    </li>
-                    <li>
-                        <span style="background-color: #fff3e0; color: #e65100; padding: 2px 4px; border-radius: 3px; font-weight: bold;">새로운 주제</span>: 
-                        아직 없는 주제를 등록할 때는 <strong>가장 큰 범위를 첫 번째</strong>에 적어주세요. (예: <em>"신기술, AI"</em>)
-                    </li>
-                    <li>
-                        <strong>작성 예시:</strong> <em>"IT, 개발자, 연봉"</em> (콤마로 구분, 최대 5개)
-                    </li>
+                    <li><strong>자동 분류:</strong> 가장 많이 쓰인 태그가 그룹 색상이 됩니다.</li>
+                    <li><strong>작성 팁:</strong> 큰 범위를 앞에 적어주세요. (예: IT, 개발, 연봉)</li>
                 </ul>
             </div>
 
@@ -50,16 +47,17 @@
         
         <div id="network">
             <!-- 그래프가 여기에 렌더링 -->
-        </div>
+            </div>
         
         <button id="reset-filter-btn" class="graph-btn">🔄 전체 목록 다시 보기</button>
     </div>
+    
     <hr>
 
     <h3>🗳️ 진행 중인 투표들</h3>
     <div id="polls" class="scroll-list_wrp">
         <!-- 투표 항목들이 여기에 동적으로 추가 -->
-    </div>
+        </div>
 
     <hr>
 
@@ -91,7 +89,7 @@
                 await loadPoll();
             } catch (error) {
                 console.error("초기화 실패:", error);
-                document.getElementById("polls").innerHTML = "앱을 로딩하는 중 오류가 발생했습니다.";
+                document.getElementById("polls").innerText = "오류가 발생했습니다.";
             }
         }
         main();
