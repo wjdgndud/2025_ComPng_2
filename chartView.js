@@ -26,6 +26,8 @@ export function showVoteChart(pollId) {
     renderChart();
 }
 
+window.showVoteChart = showVoteChart;
+
 // ====== 차트 렌더링 ======
 function renderChart() {
     if (!currentPollId) return;
