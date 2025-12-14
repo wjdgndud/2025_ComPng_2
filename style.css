@@ -390,3 +390,22 @@ h2 {
     font-size: 2rem;   
     font-weight: 700;    
 }
+.result-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #3F51B5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.result-btn {
+    white-space: nowrap;   /* 🔴 줄바꿈 금지 */
+    min-width: 64px;       /* 🔴 버튼 최소 폭 확보 */
+}
+
+
+.result-btn:hover {
+    background-color: #303F9F;
+}
