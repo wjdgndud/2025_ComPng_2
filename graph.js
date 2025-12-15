@@ -34,7 +34,7 @@ const options = {
     physics: {
         stabilization: false,
         barnesHut: { 
-            gravitationalConstant: -6000, 
+            gravitationalConstant: -3000, 
             springConstant: 0.02, 
             springLength: 140 
         }
@@ -176,7 +176,14 @@ function drawTopicNetwork(polls) {
     network = new vis.Network(container, data, options);
 
     network.on("click", (params) => {
-        if (params.nodes.length > 0) filterPollsByTag(params.nodes[0]);
+        if (params.nodes.length > 0) {
+            filterPollsByTag(params.nodes[0]);
+
+            const pollsSection = document.getElementById("polls");
+            if (pollsSection) {
+                pollsSection.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        } 
     });
 }
 

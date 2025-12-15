@@ -65,7 +65,6 @@ export async function loadPoll() {
             pollContainer.className = "poll-container";
             pollContainer.setAttribute("data-tags", tagsAttr);
 
-           
             const headerDiv = document.createElement("div");
             headerDiv.className = "poll-header";
 

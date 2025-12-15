@@ -21,7 +21,7 @@ addButton.textContent = "옵션 추가";
 // [변경] 디자인을 위해 클래스 추가 (기존에는 없었음)
 addButton.className = "add-option-btn";
 
-form.insertBefore(addButton, form.querySelector('button[type="submit"]'));
+form.insertBefore(addButton, form.querySelector('div[id="poll-tags-container"]'));
 
 // ====== 옵션 입력 관리 ======
 let optionCount = 0;
