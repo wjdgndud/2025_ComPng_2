@@ -10,13 +10,16 @@ const tagsInput = document.getElementById("poll-tags");
 const tagsContainer = document.getElementById("recommended-tags-container");
 
 // ====== 새 컨테이너 추가 (옵션 입력용) ======
-const optionsContainer = document.createElement("div");
-optionsContainer.id = "dynamic-options-container";
-questionInput.parentNode.insertBefore(optionsContainer, questionInput.nextElementSibling);
+
 
 const addButton = document.createElement("button");
 addButton.type = "button";
 addButton.textContent = "옵션 추가";
+
+const optionsContainer = document.createElement("div");
+optionsContainer.id = "dynamic-options-container";
+questionInput.parentNode.insertBefore(optionsContainer, questionInput.nextElementSibling);
+
 
 // [변경] 디자인을 위해 클래스 추가 (기존에는 없었음)
 addButton.className = "add-option-btn";
