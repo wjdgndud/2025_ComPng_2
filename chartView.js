@@ -19,12 +19,19 @@ listenForGraphData((polls) => {
 export function showVoteChart(pollId) {
     currentPollId = pollId;
 
-    // 차트 영역 보이기
     const section = document.getElementById("chart-section");
-    if (section) section.style.display = "block";
+    if (section) {
+        section.style.display = "block";
+
+        section.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 
     renderChart();
 }
+
 
 window.showVoteChart = showVoteChart;
 
