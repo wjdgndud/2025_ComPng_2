@@ -7,8 +7,6 @@ const resetBtn = document.getElementById("reset-filter-btn");
 let network = null;
 let globalTagColorMap = {}; // 색상 정보 전역 저장
 
-const BOX_THRESHOLD = 2; // 박스(Box) 태그 최소 빈도수
-
 // 해시 색상 생성 (파스텔톤)
 function stringToColor(str) {
     let hash = 0;
@@ -29,14 +27,27 @@ const options = {
     edges: {
         width: 2,
         color: { color: "#CFD8DC", highlight: "#607D8B" },
-        smooth: { type: "continuous" }
+        smooth: { 
+            type: "dynamic",
+            roundness: 0.5
+        }
     },
     physics: {
-        stabilization: false,
+        enabled: true,
+        stabilization: {
+            enabled: true,
+            iterations: 1000,
+            updateInterval: 25,
+            onlyDynamicEdges: false,
+            fit: true
+        },
         barnesHut: { 
-            gravitationalConstant: -3000, 
-            springConstant: 0.02, 
-            springLength: 140 
+            gravitationalConstant: -1000, 
+            centralGravity: 0.3,
+            springConstant: 0.04, 
+            springLength: 120,
+            damping: 0.09,
+            avoidOverlap: 0.1 
         }
     },
     interaction: { hover: true }
@@ -78,8 +89,8 @@ function drawTopicNetwork(polls) {
         // 정렬 후 첫 번째 태그가 이 그룹의 부모가 됨
         const parent = tags[0];
         
-        // 자식이 있거나(>1), 빈도수가 높으면(>=3) 박스 처리
-        if (tags.length > 1 || tagCounts[parent] >= BOX_THRESHOLD) {
+        // 빈도수가 2회 이상인 경우 박스 처리
+        if (tagCounts[parent] >= 2) {
             realParentsSet.add(parent);
         }
 
@@ -175,6 +186,15 @@ function drawTopicNetwork(polls) {
     if (network) network.destroy();
     network = new vis.Network(container, data, options);
 
+    network.once("stabilizationIterationsDone", function() {
+        network.fit({
+            animation: { 
+                duration: 1000,
+                easingFunction: "easeInOutQuad"
+            }
+        });
+    });
+
     network.on("click", (params) => {
         if (params.nodes.length > 0) {
             filterPollsByTag(params.nodes[0]);
@@ -214,5 +234,13 @@ resetBtn.addEventListener("click", () => {
         d.style.border = "1px solid #ddd";
     });
     resetBtn.style.display = "none";
-    if (network) network.unselectAll();
+    if (network) {
+        network.unselectAll();
+        network.fit({
+            animation: {
+                duration: 1000,
+                easingFunction: "easeInOutQuad"
+            }
+        });
+    }
 });

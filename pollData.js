@@ -3,7 +3,8 @@ import { db, auth } from "./firebaseConfig.js";
 
 import {
     collection, doc, getDoc, setDoc, deleteDoc, updateDoc,
-    onSnapshot, addDoc, runTransaction, query, orderBy, serverTimestamp
+    onSnapshot, addDoc, runTransaction, query, orderBy, serverTimestamp,
+    getDocs, writeBatch
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { load } from "https://esm.sh/@fingerprintjs/fingerprintjs@4";
@@ -119,17 +120,28 @@ export async function loadPoll() {
 
             data.options.forEach((opt, index) => {
                 const btn = document.createElement("button");
-                const voteCount = data.votes && data.votes[index] ? data.votes[index] : 0;
-                btn.textContent = `${opt} (${voteCount}표)`;
+
+                btn.textContent = opt;
                 btn.className = "poll-options button";
                 btn.onclick = async () => {
                     await vote(pollId, index);
-                    
                     document.dispatchEvent(new CustomEvent("pollVoted", {detail: pollId}));
                 };
-
                 optionContainer.appendChild(btn);
             });
+
+            if (userUid) {
+                const votedRef = doc(db, "polls", pollId, "votes", userUid);
+                getDoc(votedRef).then((snap) => {
+                    if (snap.exists()) {
+                        const myOptionIndex = snap.data().option;
+                        const btns = optionContainer.querySelectorAll("button");
+                        if(btns[myOptionIndex]) {
+                            btns[myOptionIndex].classList.add("selected");
+                        }
+                    }
+                }).catch(err => console.log("투표 확인 중 오류:", err));
+            }
 
             pollContainer.appendChild(optionContainer);
             pollsDiv.appendChild(pollContainer);
@@ -259,6 +271,20 @@ window.editPoll = async (pollId) => {
             
             // 투표수 0으로 리셋
             finalVotes = new Array(cleanOptions.length).fill(0);
+            const batch = writeBatch(db);
+            const votesSnapshot = await getDocs(collection(db, "polls", pollId, "votes"));
+            votesSnapshot.forEach((vDoc) => {
+                const ref = doc(db, "polls", pollId, "votes", vDoc.id);
+                batch.delete(ref);
+            });
+
+            const fpSnapshot = await getDocs(collection(db, "polls", pollId, "fingerprints"));
+            fpSnapshot.forEach((fpDoc) => {
+                const ref = doc(db, "polls", pollId, "fingerprints", fpDoc.id);
+                batch.delete(ref);
+            });
+
+            await batch.commit();
         } else {
             // 태그만 바뀐 경우 -> 투표 수 유지 (태그는 의미를 뒤집지 않으므로)
         }
