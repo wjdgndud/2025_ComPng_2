@@ -45,7 +45,7 @@ Web-based open-source project that allows users to participate in polls and surv
 | **Backend**         | Node.js                                                                           |
 | **Database**        | Firebase                                                                          |
 | **Version Control** | Git / GitHub                                                                      |
-| **Deployment**      | Git Pages                                                                                  |
+| **Deployment**      | GitHub Pages                                                                                  |
 | **Optional Tools**  | Visual Studio Code                                                                |
 
 <img width="294" height="174" alt="image" src="https://github.com/user-attachments/assets/4b6fb8c6-7462-4ed1-a465-77caeff9ee59" />
