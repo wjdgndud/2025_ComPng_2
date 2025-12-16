@@ -496,3 +496,14 @@ hr {
     margin-top: 2px;
     color: #2196F3;
 }
+
+#user-info-bar {
+    max-width: 800px; 
+    margin: 10px auto 40px; 
+    padding: 10px; 
+    text-align: center; 
+    font-size: 12px; 
+    color: #999; 
+    font-family: monospace;
+    border-top: 1px dashed #eee;
+}
